@@ -21,20 +21,20 @@ const useTyped = (ref:RefObject<HTMLElement>, text:string) => {
                   fadeOut: true,
                   loop: true
             });
-      })
+      });
 }
 
 //Componente one
 const CompClass = (props:propsCurso) => {
       //State
-      const [hovered, setHovered] = React.useState(false)
-      const [counter, setCounter] = React.useState(0)
+      const [hovered, setHovered] = React.useState(false);
+      const [counter, setCounter] = React.useState(0);
 
 
       //Effect
       React.useEffect(() => {
             
-      }, [counter])
+      }, [counter]);
       
 
       return(
@@ -77,8 +77,4 @@ const $app = (
             <CompHeader nome='React'/>
       </div>
 )
-ReactDOM.render($app, $root)      
-
-
-
-
+//ReactDOM.render($app, $root);      
