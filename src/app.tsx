@@ -1,37 +1,76 @@
 import React from "react";
-import ReactDOM, { render } from 'react-dom';
+import { render } from 'react-dom';
 
 const $root = document.getElementById('root');
-const Listcursos = [
-      {nome:'HTML', verificado:false},
-      {nome: 'CSS', verificado: true},
-      {nome: 'Js', verificado:true}
-];
-type TpCursos = {
-      nome:string,
-      verificado: boolean
+
+type TpArrCurso = {
+    nome:string;
+    verificado: boolean;
 }
 
+type TpCursos = {
+    nome:string;
+    verificado: boolean;
+    selecionado: boolean;
+    onClick: () => void;
+}
+ 
 const Cursos = (prop:TpCursos) => {
-      return(
-            <div>
-                  <h2>oi</h2>
-                  <h1>{prop.nome}</h1>
-                  {prop.verificado && <span>Ok</span>}
-            </div>
-      )
+    return(
+        <div onClick={(e) => prop.onClick()}>
+            <h1>
+                {prop.nome}
+                {prop.verificado && <span> ok</span>}
+                {prop.selecionado && <span>* </span>}
+            </h1>
+        </div>
+    )
 }
 
 const App = () => {
-      console.log(Listcursos[0].nome)
-      return(
-            <div>
-                  
-                  {Listcursos.map((c) => {
-                        <Cursos key={c.nome} nome={c.nome} verificado={c.verificado}></Cursos> 
-                  })}
-            </div>
-      )
+    //States
+    const [Listcursos, setListcursos] = React.useState<TpArrCurso[]>( [
+        {nome:'HTML', verificado:false},
+        {nome: 'CSS', verificado: true},
+        {nome: 'Js', verificado:true}
+    ]);
+
+    const [novoNomeCurso, setnovoNomeCurso] = React.useState('');
+    const [novoVerificadoCurso, setnovoVerificadorCurso] = React.useState(false);
+    const [cursoSelecionado, setcursoSelecionado] = React.useState('HTML')
+
+    return(
+        <div>
+            <form onSubmit={ e => {
+                e.preventDefault()
+                const novoCurso = {
+                    nome: novoNomeCurso,
+                    verificado: novoVerificadoCurso
+                }
+
+                setListcursos([...Listcursos, novoCurso])
+                setnovoNomeCurso('')
+                setnovoVerificadorCurso(false)
+            }}>
+                <input type="text" value={novoNomeCurso} onChange={e => setnovoNomeCurso(e.target.value)} />
+                <input type="checkbox" checked={novoVerificadoCurso} onChange={e => setnovoVerificadorCurso(e.target.checked)} />
+                <button type="submit">Criar curso</button>
+              </form>                   
+            
+            {Listcursos.map((c) => (
+                <Cursos key={c.nome} {...c} selecionado={c.nome === cursoSelecionado}  onClick={() => setcursoSelecionado(c.nome)}/>
+            ))}
+        </div>
+    )
 }
 
-ReactDOM.render(<App/>, $root)
+const ListComp = () => {
+    return(
+        <div>
+            <App></App><hr />
+            <App></App>
+        </div>
+    )
+}
+
+render(<ListComp/>, $root)
